@@ -7,7 +7,7 @@ or other application using the libvirt API.
 
 <domain type='kvm'>
   <name>win10</name>
-  <uuid>281bf437-19ad-4cda-8b97-56fc9ae0be03</uuid>
+  <uuid>a3d218ce-6a97-4a9f-9543-77fab1096732</uuid>
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
       <libosinfo:os id="http://microsoft.com/win/10"/>
@@ -17,8 +17,7 @@ or other application using the libvirt API.
   <currentMemory unit='KiB'>16777216</currentMemory>
   <vcpu placement='static'>6</vcpu>
   <os>
-    <type arch='x86_64' machine='pc-q35-6.1'>hvm</type>
-    <boot dev='hd'/>
+    <type arch='x86_64' machine='pc-q35-6.2'>hvm</type>
   </os>
   <features>
     <acpi/>
@@ -47,23 +46,19 @@ or other application using the libvirt API.
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2' discard='unmap'/>
-      <source file='/home/exploit/internaldrive/win10.qcow2'/>
-      <target dev='vda' bus='virtio'/>
-      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/home/exploit/internaldrive/mask1.qcow2'/>
+      <target dev='sda' bus='sata'/>
+      <boot order='2'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source file='/home/exploit/internaldrive/N1TLite.iso'/>
       <target dev='sdb' bus='sata'/>
       <readonly/>
+      <boot order='1'/>
       <address type='drive' controller='0' bus='0' target='0' unit='1'/>
-    </disk>
-    <disk type='file' device='disk'>
-      <driver name='qemu' type='raw'/>
-      <source file='/home/exploit/internaldrive/virtio-win-0.1.208.iso'/>
-      <target dev='sdc' bus='sata'/>
-      <address type='drive' controller='0' bus='0' target='0' unit='2'/>
     </disk>
     <controller type='usb' index='0' model='qemu-xhci' ports='15'>
       <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
@@ -72,9 +67,6 @@ or other application using the libvirt API.
       <address type='pci' domain='0x0000' bus='0x00' slot='0x1f' function='0x2'/>
     </controller>
     <controller type='pci' index='0' model='pcie-root'/>
-    <controller type='virtio-serial' index='0'>
-      <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
-    </controller>
     <controller type='pci' index='1' model='pcie-root-port'>
       <model name='pcie-root-port'/>
       <target chassis='1' port='0x8'/>
@@ -105,8 +97,15 @@ or other application using the libvirt API.
       <target chassis='6' port='0xd'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x5'/>
     </controller>
+    <controller type='pci' index='7' model='pcie-to-pci-bridge'>
+      <model name='pcie-pci-bridge'/>
+      <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
+    </controller>
     <interface type='network'>
-      <mac address='52:54:00:21:42:d0'/>
+      <mac address='52:54:00:5b:40:fc'/>
       <source network='default'/>
       <model type='e1000e'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
@@ -137,7 +136,8 @@ or other application using the libvirt API.
     </sound>
     <audio id='1' type='spice'/>
     <video>
-      <model type='none'/>
+      <model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/>
+      <address type='pci' domain='0x0000' bus='0x07' slot='0x01' function='0x0'/>
     </video>
     <redirdev bus='usb' type='spicevmc'>
       <address type='usb' bus='0' port='2'/>
@@ -146,7 +146,7 @@ or other application using the libvirt API.
       <address type='usb' bus='0' port='3'/>
     </redirdev>
     <memballoon model='virtio'>
-      <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </memballoon>
   </devices>
 </domain>
